@@ -1,0 +1,19 @@
+
+Jenkins: is an open-source automation server that facilitates continuous integration and continuous delivery (CI/CD) in software development. It helps automate the parts of software development related to building, testing, and deploying, enabling developers to focus on writing code and reducing the risks of integration issues
+
+CI/CD: It is a set of practices and methodologies aimed at improving the software development process by automating the integration, testing, and delivery of code changes.
+
+CI: build -> test -> merge
+Contineus delevery: auto redy for deploy 
+Contineus deployment: auto Deploy to production
+
+# ----------------------------------------------------------------------------------------------------------
+1st install jenkins for your os 
+do whole setup then
+start with url: http://172.22.192.1:8080/ ---------------this opens dashbord
+
+new item -> Enter an item name ->ok      ---------------- #create job
+select terminal according to os -> give cmd 
+build now ----------------------------to run cmds
+
+cron ->>>>>>>>>>>>>>>>> shedule  -> in configuration of job
