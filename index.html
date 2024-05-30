@@ -3,112 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saap Game</title>
+    <title>User Management System</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #000;
+            font-family: Arial, sans-serif;
             margin: 0;
+            padding: 0;
         }
-        canvas {
-            background-color: #fff;
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+    <header>
+        <h1>User Management System</h1>
+        <nav>
+            <ul>
+                <li><a href="#register">Register</a></li>
+                <li><a href="#login">Login</a></li>
+                <li><a href="#user-list">User List</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        const box = 20;
-        const canvasSize = 400;
-        let snake = [];
-        snake[0] = { x: 9 * box, y: 10 * box };
+    <main>
+        <section id="register">
+            <h2>Register</h2>
+            <form action="/register" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Register</button>
+            </form>
+        </section>
 
-        let food = {
-            x: Math.floor(Math.random() * 19 + 1) * box,
-            y: Math.floor(Math.random() * 19 + 1) * box
-        }
+        <section id="login">
+            <h2>Login</h2>
+            <form action="/login" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Login</button>
+            </form>
+        </section>
 
-        let score = 0;
-        let direction;
+        <section id="user-list">
+            <h2>User List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- User list will be populated here by server-side code -->
+                </tbody>
+            </table>
+        </section>
+    </main>
 
-        document.addEventListener('keydown', directionControl);
-
-        function directionControl(event) {
-            if (event.keyCode == 37 && direction != 'RIGHT') {
-                direction = 'LEFT';
-            } else if (event.keyCode == 38 && direction != 'DOWN') {
-                direction = 'UP';
-            } else if (event.keyCode == 39 && direction != 'LEFT') {
-                direction = 'RIGHT';
-            } else if (event.keyCode == 40 && direction != 'UP') {
-                direction = 'DOWN';
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvasSize, canvasSize);
-
-            for (let i = 0; i < snake.length; i++) {
-                ctx.fillStyle = (i == 0) ? 'green' : 'white';
-                ctx.fillRect(snake[i].x, snake[i].y, box, box);
-
-                ctx.strokeStyle = 'red';
-                ctx.strokeRect(snake[i].x, snake[i].y, box, box);
-            }
-
-            ctx.fillStyle = 'red';
-            ctx.fillRect(food.x, food.y, box, box);
-
-            let snakeX = snake[0].x;
-            let snakeY = snake[0].y;
-
-            if (direction == 'LEFT') snakeX -= box;
-            if (direction == 'UP') snakeY -= box;
-            if (direction == 'RIGHT') snakeX += box;
-            if (direction == 'DOWN') snakeY += box;
-
-            if (snakeX == food.x && snakeY == food.y) {
-                score++;
-                food = {
-                    x: Math.floor(Math.random() * 19 + 1) * box,
-                    y: Math.floor(Math.random() * 19 + 1) * box
-                }
-            } else {
-                snake.pop();
-            }
-
-            let newHead = {
-                x: snakeX,
-                y: snakeY
-            }
-
-            if (snakeX < 0 || snakeX >= canvasSize || snakeY < 0 || snakeY >= canvasSize || collision(newHead, snake)) {
-                clearInterval(game);
-            }
-
-            snake.unshift(newHead);
-
-            ctx.fillStyle = 'white';
-            ctx.font = '45px Changa one';
-            ctx.fillText(score, 2 * box, 1.6 * box);
-        }
-
-        function collision(head, array) {
-            for (let i = 0; i < array.length; i++) {
-                if (head.x == array[i].x && head.y == array[i].y) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        let game = setInterval(draw, 100);
-    </script>
+    <footer>
+        <p>&copy; 2024 User Management System</p>
+    </footer>
 </body>
 </html>
